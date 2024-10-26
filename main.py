@@ -85,6 +85,14 @@ def main():
     rag_system = initialize_rag_system()
     st.title("RAG System Chat Interface")
 
+    # Add sidebar with hyperlinks
+    st.sidebar.title("Sources of Truth")
+    # make me some text
+    st.sidebar.markdown("Visit the sources of truth for more information about where the RAG system gets its knowledge. You could use this to check if the model is correct and to ask questions about the content.")
+    st.sidebar.markdown("[The Secret Society of Rainbow Lemurs](https://tedsteketee.atlassian.net/wiki/spaces/~712020ec917477c3b543c198b7c9c1bd03fd16/pages/163978/The+Secret+Society+of+Rainbow+Lemurs)")
+    st.sidebar.markdown("[The Enigmatic History of the Lost City of Quixalot](https://tedsteketee.atlassian.net/wiki/spaces/~712020ec917477c3b543c198b7c9c1bd03fd16/pages/131097/The+Enigmatic+History+of+the+Lost+City+of+Quixalot)")
+
+
     # Display chat history
     display_chat_history()
 
