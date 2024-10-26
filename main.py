@@ -83,7 +83,7 @@ def main():
     # Initialize session state and RAG system
     initialize_session_state()
     rag_system = initialize_rag_system()
-    st.title("RAG System Chat Interface")
+    st.title("RAG System Chatbot Demo")
 
     # Add sidebar with hyperlinks
     st.sidebar.title("Sources of Truth")
