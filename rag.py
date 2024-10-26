@@ -55,7 +55,7 @@ class TextVectorizer:
 
 
 class DataBaseCollector:
-    def __init__(self, host, port, database, collection_name, context_size):
+    def __init__(self, database, collection_name, context_size):
         load_dotenv()
         self.api_key = os.getenv("CONFLUENCE_TOKEN")
         self.api_email = os.getenv("CONFLUENCE_EMAIL")
@@ -307,8 +307,8 @@ Please provide a detailed answer, citing specific information from the context w
 
 if __name__ == "__main__":
     collector = DataBaseCollector(
-        host="localhost",
-        port=27017,
+        # host="localhost",
+        # port=27017,
         database="confluence",
         collection_name="pages",
         context_size=200
