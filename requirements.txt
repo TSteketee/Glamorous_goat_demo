@@ -1,0 +1,11 @@
+streamlit==1.37.1
+apache-airflow==2.10.2
+numpy==1.25.2
+requests==2.32.3
+python-dotenv==1.0.1
+pymongo==4.10.1
+transformers==4.43.3
+torch==2.1.0
+faiss-cpu==1.9.0
+groq==0.10.0
+beautifulsoup4==4.12.3
