@@ -2,6 +2,7 @@ import os
 import logging
 import streamlit as st
 from rag import RAGSystem, DataBaseCollector
+import time
 
 # Set environment variable to avoid OpenMP errors
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
@@ -46,10 +47,12 @@ def handle_user_input(rag_system, user_input: str):
     """Process user input and generate response."""
     if user_input:
         try:
-            # Generate response
-            start = time.time()
-            response = rag_system.generate_response(user_input)
-            logging.info(f"Response generated in {time.time() - start:.2f} seconds.")
+            # Show "thinking" indicator
+            with st.spinner("Thinking..."):
+                # Generate response
+                start = time.time()
+                response = rag_system.generate_response(user_input)
+                logging.info(f"Response generated in {time.time() - start:.2f} seconds.")
             
             # Update conversation memory
             start = time.time()
@@ -57,6 +60,12 @@ def handle_user_input(rag_system, user_input: str):
             st.session_state.messages.append({"role": "user", "content": user_input})
             st.session_state.messages.append({"role": "assistant", "content": response})
             logging.info(f"Conversation memory updated in {time.time() - start:.2f} seconds.")
+            
+            # Display response with fading-in animation
+            response_placeholder = st.empty()
+            response_placeholder.markdown(f"<div style='opacity: 0; transition: opacity 1s;'>{response}</div>", unsafe_allow_html=True)
+            time.sleep(0.1)  # Small delay to allow the DOM to update
+            response_placeholder.markdown(f"<div style='opacity: 1; transition: opacity 1s;'>{response}</div>", unsafe_allow_html=True)
             
         except Exception as e:
             logging.error(f"Error generating response: {str(e)}")
@@ -70,15 +79,11 @@ def display_chat_history():
         else:
             st.chat_message("assistant", avatar="🤖").markdown(message["content"])
 
-
 def main():
-
     # Initialize session state and RAG system
     initialize_session_state()
-
     rag_system = initialize_rag_system()
     st.title("RAG System Chat Interface")
-
 
     # Display chat history
     display_chat_history()
@@ -87,8 +92,6 @@ def main():
     if user_input := st.chat_input("Type your question here..."):
         handle_user_input(rag_system, user_input)
         st.rerun()
-
-import time
 
 if __name__ == "__main__":
     main()
