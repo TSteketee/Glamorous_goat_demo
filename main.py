@@ -28,11 +28,13 @@ def initialize_rag_system():
         collection_name="pages",
         context_size=200
     )
+    
+    collector.update([163978, 131097])
 
     rag_system = RAGSystem(
         faiss_index_path="faiss.index",
-        mongo_host="localhost",
-        mongo_port=27017,
+        # mongo_host="localhost",
+        # mongo_port=27017,
         mongo_db="confluence",
         mongo_collection="pages"
     )
@@ -64,11 +66,13 @@ def display_chat_history():
             st.chat_message("assistant", avatar="🤖").markdown(message["content"])
 
 def main():
+    # first update the database
+    rag_system = initialize_rag_system()
+
     st.title("RAG System Chat Interface")
 
     # Initialize session state and RAG system
     initialize_session_state()
-    rag_system = initialize_rag_system()
 
     # Display chat history
     display_chat_history()

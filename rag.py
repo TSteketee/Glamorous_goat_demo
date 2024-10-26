@@ -3,7 +3,8 @@ import numpy as np
 import requests
 from dotenv import load_dotenv
 
-from pymongo import MongoClient
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
 from transformers import BertTokenizer, BertModel
 import torch
 import faiss
@@ -13,6 +14,7 @@ from bs4 import BeautifulSoup
 import re
 
 import logging
+
 
 class TextVectorizer:
     def __init__(self, model_name):
@@ -58,12 +60,15 @@ class DataBaseCollector:
         self.api_key = os.getenv("CONFLUENCE_TOKEN")
         self.api_email = os.getenv("CONFLUENCE_EMAIL")
         self.api_base_url = os.getenv("CONFLUENCE_BASE_URL")
-        
+        self.uri = uri = os.getenv("MONGO_URI")
+
         # Validate environment variables
         if not all([self.api_key, self.api_email, self.api_base_url]):
             raise ValueError("Missing required environment variables")
         
-        self.client = MongoClient(f'mongodb://{host}:{port}/')
+
+        # Connect to MongoDB Atlas
+        self.client = MongoClient(self.uri, server_api=ServerApi('1'))
         self.db = self.client[database]
         self.collection = self.db[collection_name]
         
@@ -199,11 +204,13 @@ class DataBaseCollector:
 
 
 class RAGSystem:
-    def __init__(self, faiss_index_path, mongo_host, mongo_port, mongo_db, mongo_collection):
+    def __init__(self, faiss_index_path, mongo_db, mongo_collection):
         # Initialize components
         try:
+            load_dotenv()
+            self.uri = os.getenv("MONGO_URI")
             self.index = faiss.read_index(faiss_index_path)
-            self.client = MongoClient(f'mongodb://{mongo_host}:{mongo_port}/')
+            self.client = MongoClient(self.uri, server_api=ServerApi('1'))
             self.db = self.client[mongo_db]
             self.collection = self.db[mongo_collection]
             
@@ -296,3 +303,15 @@ Please provide a detailed answer, citing specific information from the context w
         except Exception as e:
             logging.error(f"Error generating response: {str(e)}")
             return "I encountered an error while trying to generate a response. Please try again."
+        
+
+if __name__ == "__main__":
+    collector = DataBaseCollector(
+        host="localhost",
+        port=27017,
+        database="confluence",
+        collection_name="pages",
+        context_size=200
+    )
+    
+    collector.update([163978, 131097])
