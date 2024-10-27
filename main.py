@@ -71,13 +71,13 @@ def handle_user_input(rag_system, user_input: str):
             logging.error(f"Error generating response: {str(e)}")
             st.error("An error occurred while generating the response.")
 
-def display_chat_history():
+def display_chat_history(user_emoticon: str):
     """Display chat messages using Streamlit's chat message containers."""
     for message in st.session_state.messages:
         if message["role"] == "user":
-            st.chat_message("user", avatar="🐐").markdown(message["content"])
+            st.chat_message("user", avatar=user_emoticon).markdown(message["content"])
         else:
-            st.chat_message("assistant", avatar="🤖").markdown(message["content"])
+            st.chat_message("assistant", avatar="🐐").markdown(message["content"])
 
 def main():
     # Initialize session state and RAG system
@@ -92,9 +92,15 @@ def main():
     st.sidebar.markdown("[The Secret Society of Rainbow Lemurs](https://tedsteketee.atlassian.net/wiki/spaces/~712020ec917477c3b543c198b7c9c1bd03fd16/pages/163978/The+Secret+Society+of+Rainbow+Lemurs)")
     st.sidebar.markdown("[The Enigmatic History of the Lost City of Quixalot](https://tedsteketee.atlassian.net/wiki/spaces/~712020ec917477c3b543c198b7c9c1bd03fd16/pages/131097/The+Enigmatic+History+of+the+Lost+City+of+Quixalot)")
 
+    # make an option to choose the emoticon for the user
+    st.sidebar.title("User Emoticon")
+    st.sidebar.markdown("Choose your user emoticon!")
+    user_emoticon = st.sidebar.selectbox("Select your user emoticon", ["🧑", "👩", "👨", "👩‍🦰", "👨‍🦰", "👩‍🦱", "👨‍🦱", "👩‍🦲", "👨‍🦲", "👩‍🦳", "👨‍🦳", "👱‍♀️", "👱‍♂️", "🧔", "👵", "👴", "👶", "👧", "🧒", "👦", "👩‍🦰", "👨‍🦰", "👩‍🦱", "👨‍🦱", "👩‍🦲", "👨‍🦲", "👩‍🦳", "👨‍🦳", "👱‍♀️", "👱‍♂️", "🧔", "👵", "👴", "👶", "👧", "🧒", "👦"])
+    st.session_state.user_emoticon = user_emoticon
+
 
     # Display chat history
-    display_chat_history()
+    display_chat_history(user_emoticon)
 
     # Chat input
     if user_input := st.chat_input("Type your question here..."):
