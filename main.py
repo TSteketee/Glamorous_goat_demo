@@ -94,8 +94,8 @@ def main():
     initialize_session_state()
     rag_system = initialize_rag_system()
     st.title("RAG System Chatbot Demo")
-    outgoing_ip = get_outgoing_ip()
-    st.markdown(f"Server IP: {get_outgoing_ip()}")
+    # outgoing_ip = get_outgoing_ip()
+    # st.markdown(f"Server IP: {get_outgoing_ip()}")
     st.markdown("Welcome to the RAG System Chatbot Demo! Ask me anything about the Lost City of Quixalot and the Rainbow Lemurs, and I'll do my best to provide you with accurate information.")
 
     # Add sidebar with hyperlinks
