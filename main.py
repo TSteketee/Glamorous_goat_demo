@@ -3,6 +3,7 @@ import logging
 import streamlit as st
 from rag import RAGSystem, DataBaseCollector
 import time
+import socket
 
 # Set environment variable to avoid OpenMP errors
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
@@ -79,11 +80,18 @@ def display_chat_history(user_emoticon: str):
         else:
             st.chat_message("assistant", avatar="🐐").markdown(message["content"])
 
+def get_server_ip():
+    hostname = socket.gethostname()  # Get the hostname of the machine
+    server_ip = socket.gethostbyname(hostname)  # Get the IP address from the hostname
+    return server_ip
+
 def main():
     # Initialize session state and RAG system
     initialize_session_state()
     rag_system = initialize_rag_system()
     st.title("RAG System Chatbot Demo")
+    st.markdown(f"Server IP: {get_server_ip()}")
+    st.markdown("Welcome to the RAG System Chatbot Demo! Ask me anything about the Lost City of Quixalot and the Rainbow Lemurs, and I'll do my best to provide you with accurate information.")
 
     # Add sidebar with hyperlinks
     st.sidebar.title("Sources of Truth")
@@ -97,6 +105,8 @@ def main():
     st.sidebar.markdown("Choose your user emoticon!")
     user_emoticon = st.sidebar.selectbox("Select your user emoticon", ["🧑", "👩", "👨", "👩‍🦰", "👨‍🦰", "👩‍🦱", "👨‍🦱", "👩‍🦲", "👨‍🦲", "👩‍🦳", "👨‍🦳", "👱‍♀️", "👱‍♂️", "🧔", "👵", "👴", "👶", "👧", "🧒", "👦", "👩‍🦰", "👨‍🦰", "👩‍🦱", "👨‍🦱", "👩‍🦲", "👨‍🦲", "👩‍🦳", "👨‍🦳", "👱‍♀️", "👱‍♂️", "🧔", "👵", "👴", "👶", "👧", "🧒", "👦"])
     st.session_state.user_emoticon = user_emoticon
+    
+
 
 
     # Display chat history
