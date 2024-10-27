@@ -80,17 +80,22 @@ def display_chat_history(user_emoticon: str):
         else:
             st.chat_message("assistant", avatar="🐐").markdown(message["content"])
 
-def get_server_ip():
-    hostname = socket.gethostname()  # Get the hostname of the machine
-    server_ip = socket.gethostbyname(hostname)  # Get the IP address from the hostname
-    return server_ip
+import requests
+
+def get_outgoing_ip():
+    try:
+        response = requests.get("https://api.ipify.org?format=json")
+        return response.json()["ip"]
+    except Exception as e:
+        return f"Could not get IP: {str(e)}"
 
 def main():
     # Initialize session state and RAG system
     initialize_session_state()
     rag_system = initialize_rag_system()
     st.title("RAG System Chatbot Demo")
-    st.markdown(f"Server IP: {get_server_ip()}")
+    outgoing_ip = get_outgoing_ip()
+    st.markdown(f"Server IP: {get_outgoing_ip()}")
     st.markdown("Welcome to the RAG System Chatbot Demo! Ask me anything about the Lost City of Quixalot and the Rainbow Lemurs, and I'll do my best to provide you with accurate information.")
 
     # Add sidebar with hyperlinks
