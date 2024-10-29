@@ -295,7 +295,7 @@ Please provide a detailed answer, citing specific information from the context w
                     }
                 ],
                 model="llama3-8b-8192",
-                temperature=0.2  # Lower temperature for more focused responses
+                temperature=temperature  # Lower temperature for more focused responses
             )
 
             return chat_completion.choices[0].message.content
