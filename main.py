@@ -3,7 +3,8 @@ import logging
 import streamlit as st
 from rag import RAGSystem, DataBaseCollector
 import time
-import socket
+import requests
+
 
 # Set environment variable to avoid OpenMP errors
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
@@ -52,7 +53,7 @@ def handle_user_input(rag_system, user_input: str):
             with st.spinner("Thinking..."):
                 # Generate response
                 start = time.time()
-                response = rag_system.generate_response(user_input)
+                response = rag_system.generate_response(user_input, temperature=st.session_state.temperature)
                 logging.info(f"Response generated in {time.time() - start:.2f} seconds.")
             
             # Update conversation memory
@@ -80,7 +81,6 @@ def display_chat_history(user_emoticon: str):
         else:
             st.chat_message("assistant", avatar="🐐").markdown(message["content"])
 
-import requests
 
 def get_outgoing_ip():
     try:
@@ -104,6 +104,13 @@ def main():
     st.sidebar.markdown("Visit the sources of truth for more information about where the RAG system gets its knowledge. You could use this to check if the model is correct and to ask questions about the content.")
     st.sidebar.markdown("[The Secret Society of Rainbow Lemurs](https://tedsteketee.atlassian.net/wiki/spaces/~712020ec917477c3b543c198b7c9c1bd03fd16/pages/163978/The+Secret+Society+of+Rainbow+Lemurs)")
     st.sidebar.markdown("[The Enigmatic History of the Lost City of Quixalot](https://tedsteketee.atlassian.net/wiki/spaces/~712020ec917477c3b543c198b7c9c1bd03fd16/pages/131097/The+Enigmatic+History+of+the+Lost+City+of+Quixalot)")
+
+    # make an option to set the temperature
+    st.sidebar.title("Temperature")
+    st.sidebar.markdown("Choose the temperature for the model's responses. A higher temperature will make the responses more creative and less factual.")
+    temperature = st.sidebar.slider("Select the temperature", 0.1, 1.0, 0.2, 0.1)
+    st.session_state.temperature = temperature
+
 
     # make an option to choose the emoticon for the user
     st.sidebar.title("User Emoticon")

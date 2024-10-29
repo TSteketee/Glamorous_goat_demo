@@ -260,7 +260,7 @@ class RAGSystem:
             logging.error(f"Error retrieving chunks: {str(e)}")
             return []
 
-    def generate_response(self, query):
+    def generate_response(self, query, temperature=0.2):
         """Generate a response using retrieved context and Groq."""
         try:
             relevant_chunks = self.retrieve_relevant_chunks(query)
